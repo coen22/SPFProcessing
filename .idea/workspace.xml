@@ -1,7 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ce025ea9-8b2e-431c-b10b-c840b6f1b1ea" name="Default" comment="" />
+    <list default="true" id="ce025ea9-8b2e-431c-b10b-c840b6f1b1ea" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CPI.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/HOUSING.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/INDPROD.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/NGDP.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PCE.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/PGDP.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RCBI.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RCONSUM.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RFEDGOV.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RGDP.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RNRESIN.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RRESINV.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RSLGOV.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TBILL.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/TBOND.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/UNEMP.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/CSVWriter2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CSVWriter2.java" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/bin/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -15,8 +36,8 @@
       <file leaf-file-name="CSVReader.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/CSVReader.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-770">
-              <caret line="11" column="9" selection-start-line="11" selection-start-column="9" selection-end-line="11" selection-end-column="9" />
+            <state relative-caret-position="110">
+              <caret line="69" selection-start-line="69" selection-end-line="75" selection-end-column="41" />
             </state>
           </provider>
         </entry>
@@ -24,18 +45,21 @@
       <file leaf-file-name="CSVWriter2.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/CSVWriter2.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="286">
-              <caret line="88" column="68" lean-forward="true" selection-start-line="88" selection-start-column="68" selection-end-line="88" selection-end-column="68" />
+            <state relative-caret-position="83">
+              <caret line="141" selection-start-line="141" selection-end-line="141" />
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="GradleLocalSettings">
     <option name="projectSyncType">
       <map>
-        <entry key="$USER_HOME$/Documents/MaastrichtConnect/ConnectBE" value="PREVIEW" />
+        <entry key="$PROJECT_DIR$/../../MaastrichtConnect/ConnectBE" value="PREVIEW" />
       </map>
     </option>
   </component>
@@ -57,15 +81,16 @@
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="1029" />
-    <option name="y" value="323" />
-    <option name="width" value="1406" />
-    <option name="height" value="993" />
+    <option name="y" value="322" />
+    <option name="width" value="1407" />
+    <option name="height" value="994" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -83,7 +108,6 @@
         </subPane>
       </pane>
       <pane id="PackagesPane" />
-      <pane id="AndroidView" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -178,11 +202,12 @@
       <updated>1543328647960</updated>
       <workItem from="1543328651958" duration="550000" />
       <workItem from="1543329232037" duration="2321000" />
+      <workItem from="1543400329416" duration="2869000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2871000" />
+    <option name="totallyTimeSpent" value="5740000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1979" height="797" extended-state="6" />
@@ -197,7 +222,7 @@
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="right" id="Maven Projects" order="3" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3298351" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Capture Tool" order="2" />
@@ -239,6 +264,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/CSVWriter2.java">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1716">
+          <caret line="88" column="68" lean-forward="true" selection-start-line="88" selection-start-column="68" selection-end-line="88" selection-end-column="68" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/CSVReader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="110">
+          <caret line="11" column="9" selection-start-line="11" selection-start-column="9" selection-end-line="11" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/CSVWriter2.java">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="990">
           <caret line="55" column="20" selection-start-line="55" selection-start-column="20" selection-end-line="55" selection-end-column="20" />
         </state>
@@ -246,15 +285,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/CSVReader.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-770">
-          <caret line="11" column="9" selection-start-line="11" selection-start-column="9" selection-end-line="11" selection-end-column="9" />
+        <state relative-caret-position="110">
+          <caret line="69" selection-start-line="69" selection-end-line="75" selection-end-column="41" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/CSVWriter2.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="88" column="68" lean-forward="true" selection-start-line="88" selection-start-column="68" selection-end-line="88" selection-end-column="68" />
+        <state relative-caret-position="83">
+          <caret line="141" selection-start-line="141" selection-end-line="141" />
         </state>
       </provider>
     </entry>
