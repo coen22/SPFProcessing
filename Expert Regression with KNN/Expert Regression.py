@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-series = "INDPROD"
+series = "RFEDGOV"
 cwd = "C:\\Users\\mazch\\Desktop\\Shit Hub\\SPFProcessing\\input\\"
 min_obs = 5
 no_history_penalty = 1
