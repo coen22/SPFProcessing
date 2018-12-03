@@ -4,22 +4,23 @@ import matplotlib.pyplot as plt
 
 series = "INDPROD"
 cwd = "C:\\Users\\mazch\\Desktop\\Shit Hub\\SPFProcessing\\input\\"
-min_obs = 10
-no_history_penalty = 0.5
+min_obs = 5
+no_history_penalty = 1
 steps_ahead = 4
 hold_out_steps = 20
 variance_max = 0.2
 histogram_length = 8
 std_histogram = 4
 max_window = 5
-use_variance_adjusted = False
+use_variance_adjusted = True
 just_histograms = False
+just_variance = False
 final_result = True
 
 # from testing
-# NGDP ~ min obs 10 not histogram adjusted
-# INPROD ~ Histogram adjusted
-# UNEMP ~ 20, 
+# NGDP ~ just variance adjusted, 5 min observations
+# INPROD ~ 5, bias, variance and histogram
+# UNEMP ~ 5, bias and variance adjusted
 
 periods_ahead_dict = {0:"End_of_Current_Quarter",1:"Next_Quarter",2:"Next_Quarter+1",3:"Next_Quarter+2",4:"Next_Quarter+3"}
 dfs = pd.read_csv(cwd+series+".csv")
@@ -69,10 +70,12 @@ agent_table = pd.DataFrame(index=agents,columns=time_stamps)
 # Populate table by agent
 for s in time_stamps:
     y, q = stamp2date(s)
-    y, q = periods_ahead(y,q,steps_ahead)
-    agent_table[s]["Truth"] = truth[truth["Date"]==str(y)+":Q"+str(q)][series].values[0]
+    y_a, q_a = periods_ahead(y,q,steps_ahead)
+    agent_table[s]["Truth"] = truth[truth["Date"]==str(y_a)+":Q"+str(q_a)][series].values[0]
     for a in agents[:-1]:
-        pred = dfs[dfs["YEAR"]==y][dfs["QUARTER"]==q][dfs["ID"]==int(a)][periods_ahead_dict[steps_ahead]]
+        pred = dfs.loc[dfs["YEAR"]==y]
+        pred = pred.loc[dfs["QUARTER"]==q]
+        pred = pred.loc[dfs["ID"]==int(a)][periods_ahead_dict[steps_ahead]]
         if len(pred) > 0:
             agent_table[s][a] = pred.values[0]
  
@@ -193,84 +196,86 @@ else:
 
 print("With adjustment for variance",evaluate(weighted_table,True,True))
 
-histograms = {}
-error_multiplier = {}
-prediction = {}
+if not just_variance:
 
-for s in time_stamps:
-    vals = np.array([])
-    freqs = np.array([])
-    for a in agents[:-1]:
-        if not np.isnan(z_scores[s][a]):
-            vals = np.append(vals,z_scores[s][a])
-            freqs = np.append(freqs,weighting_table[s][a])
-    histogram = [0] * histogram_length
-    for i in range(len(vals)):
-        if vals[i] < -std_histogram:
-            if use_variance_adjusted:
-                histogram[0] = histogram[0] + freqs[i]
-            else:
-                histogram[0] = histogram[0] + 1
-        elif vals[i] > std_histogram:
-            if use_variance_adjusted:
-                histogram[0] = histogram[0] + freqs[i]
-            else:
-                histogram[-1] = histogram[-1] + 1
-        else:
-            v_new = int(np.round((vals[i] + std_histogram)*(histogram_length-1)/(2*std_histogram)))
-            if use_variance_adjusted:
-                histogram[v_new] = histogram[v_new] + freqs[i]
-            else:
-                histogram[v_new] = histogram[v_new] + 1
-    histogram = np.array(histogram)
-    histogram = histogram/np.sqrt(np.dot(histogram,histogram))
-    histograms[s] = histogram
-    if use_variance_adjusted:
-        prediction[s] = np.sum(weighted_table.loc[agents[:-1]][s])
-    else:
-        prediction[s] = np.mean(adjusted_table.loc[agents[:-1]][s])
-    error_multiplier[s] = adjusted_table[s]["Truth"]/prediction[s]
+    histograms = {}
+    error_multiplier = {}
+    prediction = {}
 
-def KNN_Regression(histograms,error_multiplier,prediction):
-    for p in range(len(time_stamps)):
-        s = time_stamps[p]
-        current_histo = histograms[s]
-        past_histograms = {}
-        past_distances = {}
-        for i in range(max(p-1,0)):
-            q = time_stamps[i]
-            new_histo = histograms[q]
-            #dst = np.sum((current_histo - new_histo)**2)
-            #print(dst)
-            dst = 1 - np.dot(current_histo,new_histo)
-            dst = 1 / dst
-            if len(past_histograms.keys()) <= max_window:
-                past_distances[dst] = q
-            else:
-                min_dist = np.min(list(past_distances.keys()))
-                if dst > min_dist:
-                    del past_histograms[past_distances[min_dist]]
-                    del past_distances[min_dist]
-                    past_distances[dst] = q
-        total_dst = np.sum(list(past_distances.keys()))
-        if total_dst>0:
-            estimate = 0
-            for v in  past_distances.keys():
-                #print(total_dst)
-                estimate += v/total_dst*error_multiplier[past_distances[v]]
-            prediction[s] *= estimate
-    return prediction
-
-prediction = KNN_Regression(histograms,error_multiplier,prediction)
-
-errors = {}
-if final_result:
-    for s in time_stamps[-hold_out_steps:]:
-        errors[s] = prediction[s] - adjusted_table[s]["Truth"]
-        errors[s] **= 2
-    print('After histogram adjusting',np.sum(list(errors.values())))
-else:
     for s in time_stamps:
-        errors[s] = prediction[s] - adjusted_table[s]["Truth"]
-        errors[s] **= 2
-    print('After histogram adjusting',np.sum(list(errors.values())))
+        vals = np.array([])
+        freqs = np.array([])
+        for a in agents[:-1]:
+            if not np.isnan(z_scores[s][a]):
+                vals = np.append(vals,z_scores[s][a])
+                freqs = np.append(freqs,weighting_table[s][a])
+        histogram = [0] * histogram_length
+        for i in range(len(vals)):
+            if vals[i] < -std_histogram:
+                if use_variance_adjusted:
+                    histogram[0] = histogram[0] + freqs[i]
+                else:
+                    histogram[0] = histogram[0] + 1
+            elif vals[i] > std_histogram:
+                if use_variance_adjusted:
+                    histogram[0] = histogram[0] + freqs[i]
+                else:
+                    histogram[-1] = histogram[-1] + 1
+            else:
+                v_new = int(np.round((vals[i] + std_histogram)*(histogram_length-1)/(2*std_histogram)))
+                if use_variance_adjusted:
+                    histogram[v_new] = histogram[v_new] + freqs[i]
+                else:
+                    histogram[v_new] = histogram[v_new] + 1
+        histogram = np.array(histogram)
+        histogram = histogram/np.sqrt(np.dot(histogram,histogram))
+        histograms[s] = histogram
+        if use_variance_adjusted:
+            prediction[s] = np.sum(weighted_table.loc[agents[:-1]][s])
+        else:
+            prediction[s] = np.mean(adjusted_table.loc[agents[:-1]][s])
+        error_multiplier[s] = adjusted_table[s]["Truth"]/prediction[s]
+    
+    def KNN_Regression(histograms,error_multiplier,prediction):
+        for p in range(len(time_stamps)):
+            s = time_stamps[p]
+            current_histo = histograms[s]
+            past_histograms = {}
+            past_distances = {}
+            for i in range(max(p-1,0)):
+                q = time_stamps[i]
+                new_histo = histograms[q]
+                #dst = np.sum((current_histo - new_histo)**2)
+                #print(dst)
+                dst = 1 - np.dot(current_histo,new_histo)
+                dst = 1 / dst
+                if len(past_histograms.keys()) <= max_window:
+                    past_distances[dst] = q
+                else:
+                    min_dist = np.min(list(past_distances.keys()))
+                    if dst > min_dist:
+                        del past_histograms[past_distances[min_dist]]
+                        del past_distances[min_dist]
+                        past_distances[dst] = q
+            total_dst = np.sum(list(past_distances.keys()))
+            if total_dst>0:
+                estimate = 0
+                for v in  past_distances.keys():
+                    #print(total_dst)
+                    estimate += v/total_dst*error_multiplier[past_distances[v]]
+                prediction[s] *= estimate
+        return prediction
+    
+    prediction = KNN_Regression(histograms,error_multiplier,prediction)
+    
+    errors = {}
+    if final_result:
+        for s in time_stamps[-hold_out_steps:]:
+            errors[s] = prediction[s] - adjusted_table[s]["Truth"]
+            errors[s] **= 2
+        print('After histogram adjusting',np.sum(list(errors.values())))
+    else:
+        for s in time_stamps:
+            errors[s] = prediction[s] - adjusted_table[s]["Truth"]
+            errors[s] **= 2
+        print('After histogram adjusting',np.sum(list(errors.values())))

@@ -11,7 +11,7 @@ series = "NGDP"
 cwd = "C:\\Users\\mazch\\Desktop\\Shit Hub\\SPFProcessing\\input\\"
 n = 9 # window size for bias
 m = 9 # window size for variance
-steps_ahead = 3
+steps_ahead = 4
 save_mp4 = False
 
 ## Set up bias and variance tables
@@ -62,10 +62,12 @@ agent_table = pd.DataFrame(index=agents,columns=time_stamps)
 # Populate table by agent
 for s in time_stamps:
     y, q = stamp2date(s)
-    y, q = periods_ahead(y,q,steps_ahead)
-    agent_table[s]["Truth"] = truth[truth["Date"]==str(y)+":Q"+str(q)][series].values[0]
+    y_a, q_a = periods_ahead(y,q,steps_ahead)
+    agent_table[s]["Truth"] = truth[truth["Date"]==str(y_a)+":Q"+str(q_a)][series].values[0]
     for a in agents[:-1]:
-        pred = dfs[dfs["YEAR"]==y][dfs["QUARTER"]==q][dfs["ID"]==int(a)][periods_ahead_dict[steps_ahead]]
+        pred = dfs.loc[dfs["YEAR"]==y]
+        pred = pred.loc[dfs["QUARTER"]==q]
+        pred = pred.loc[dfs["ID"]==int(a)][periods_ahead_dict[steps_ahead]]
         if len(pred) > 0:
             agent_table[s][a] = pred.values[0]
     
