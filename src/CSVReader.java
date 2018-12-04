@@ -2,9 +2,12 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 public class CSVReader {
@@ -13,9 +16,13 @@ public class CSVReader {
 
         String line = "";
         String cvsSplitBy = ",";
+		String outputPath = "output_original/";
         
         int lowest = Integer.MAX_VALUE;
         int highest = 0;
+        
+		if (!new File(outputPath).exists())
+			new File(outputPath).mkdirs();
         
         File folder = new File("input");
         File[] listOfFiles = folder.listFiles();
@@ -105,8 +112,11 @@ public class CSVReader {
 						}
 		            }
 		            
-		            System.out.println(output);
-		            BufferedWriter writer = new BufferedWriter(new FileWriter(listOfFiles[j].getName()));
+//		            System.out.println(output);
+					var filePath = outputPath + listOfFiles[j].getName();
+					System.out.println(filePath);
+					BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath), StandardCharsets.UTF_8));
+		            
 		            writer.write(output.toString());
 		            writer.close();
 		            

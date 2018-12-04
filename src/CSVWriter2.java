@@ -2,9 +2,12 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -58,7 +61,7 @@ public class CSVWriter2 {
 
 					var output = new StringBuilder();
 
-					output.append("Quarter Timestamp,");
+					output.append("\"Quarter Timestamp\";");
 
 					var removalDic = new HashMap<String, boolean[]>();
 
@@ -80,21 +83,21 @@ public class CSVWriter2 {
 						}
 
 						if (hasInfo[0])
-							output.append("Estimated This Quarter" + entry.getKey() + ",");
+							output.append("\"Estimated This Quarter" + entry.getKey() + "\";");
 						if (hasInfo[1])
-							output.append("Estimated Last Quarter" + entry.getKey() + ",");
+							output.append("\"Estimated Last Quarter" + entry.getKey() + "\";");
 						if (hasInfo[2])
-							output.append("Estimated Half Year Ago" + entry.getKey() + ",");
+							output.append("\"Estimated Half Year Ago" + entry.getKey() + "\";");
 						if (hasInfo[3])
-							output.append("Estimated Three Quarters Ago" + entry.getKey() + ",");
+							output.append("\"Estimated Three Quarters Ago" + entry.getKey() + "\";");
 						if (hasInfo[4])
-							output.append("Estimated One Year Ago" + entry.getKey() + ",");
+							output.append("\"Estimated One Year Ago" + entry.getKey() + "\";");
 
 						removalDic.put(entry.getKey(), hasInfo);
 					}
 
-					output.append("Ground Truth");
-					output.append("\n");
+					output.append("\"Ground Truth\";");
+					output.append("\r\n");
 
 					for (int i = lowest + 5; i <= highest; i++) {
 
@@ -111,7 +114,7 @@ public class CSVWriter2 {
 						if (commonTruth == null)
 							continue;
 
-						output.append(i).append(",");
+						output.append(i).append(";");
 
 						for (var entry : dictionary.entrySet()) {
 							var removed = removalDic.get(entry.getKey());
@@ -119,42 +122,44 @@ public class CSVWriter2 {
 							if (removed[0]) {
 								if (entry.getValue().containsKey(i - 1))
 									output.append(entry.getValue().get(i - 1)[6]);
-								output.append(",");
+								output.append(";");
 							}
 
 							if (removed[1]) {
 								if (entry.getValue().containsKey(i - 2))
 									output.append(entry.getValue().get(i - 2)[7]);
-								output.append(",");
+								output.append(";");
 							}
 
 							if (removed[2]) {
 								if (entry.getValue().containsKey(i - 3))
 									output.append(entry.getValue().get(i - 3)[8]);
-								output.append(",");
+								output.append(";");
 							}
 
 							if (removed[3]) {
 								if (entry.getValue().containsKey(i - 4))
 									output.append(entry.getValue().get(i - 4)[9]);
-								output.append(",");
+								output.append(";");
 							}
 
 							if (removed[4]) {
 								if (entry.getValue().containsKey(i - 5))
 									output.append(entry.getValue().get(i - 5)[10]);
-								output.append(",");
+								output.append(";");
 							}
 						}
 
 						output.append(commonTruth);
-						output.append("\n");
+						output.append("\r\n");
 					}
 
 //		            System.out.println(output);
 					var filePath = outputPath + listOfFiles[j].getName();
 					System.out.println(filePath);
-					BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+//					BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+					BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath), StandardCharsets.UTF_8));
+		            
 					writer.write(output.toString());
 					writer.close();
 
