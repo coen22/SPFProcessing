@@ -280,7 +280,7 @@ public class CSVWriter2 {
 									CubicSpline spline = null;
 									if (points.size() >= 3)
 										spline = new CubicSpline(points.getX(), points.getY());
-									
+
 									if (spline != null && i > spline.getXmin() && i < spline.getXmax())
 										output.append(spline.interpolate(i) + averages[i]);
 								}
