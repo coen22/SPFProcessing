@@ -1,5 +1,6 @@
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.function.ToDoubleFunction;
 
 public class PointList extends ArrayList<Point2D.Double> {
 
@@ -28,4 +29,7 @@ public class PointList extends ArrayList<Point2D.Double> {
 		return true;
 	}
 	
+	public double average() {
+		return this.stream().mapToDouble(p -> p.y).average().orElse(Double.NaN);
+	}
 }
