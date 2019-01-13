@@ -21,7 +21,16 @@ public class CSVReaderInterpolationEmre {
 			new File(outputPath).mkdirs();
         
         File folder = new File("input");
-        File[] listOfFiles = folder.listFiles();
+		File[] listOfFiles = folder.listFiles(new FilenameFilter() {
+			
+			@Override
+			public boolean accept(File dir, String name) {
+				if (name.contains(".csv"))
+					return true;
+					
+				return false;
+			}
+		});
 
 		for (int j = 0; j < listOfFiles.length; j++) {
 			if (listOfFiles[j].isFile()) {
@@ -59,8 +68,8 @@ public class CSVReaderInterpolationEmre {
 					var interpolationDic = new HashMap<String, PointList>();
 
 					for (var entry : dictionary.entrySet()) {
-						if (!interpolationDic.containsKey(entry.getKey()))
-							interpolationDic.put(entry.getKey(), new PointList());
+						if (!interpolationDic.containsKey(entry.getKey() + 0))
+							interpolationDic.put(entry.getKey() + 0, new PointList());
 						if (!interpolationDic.containsKey(entry.getKey() + 1))
 							interpolationDic.put(entry.getKey() + 1, new PointList());
 						if (!interpolationDic.containsKey(entry.getKey() + 2))
@@ -80,6 +89,12 @@ public class CSVReaderInterpolationEmre {
 
 						// calculate the average
 						for (var entry : dictionary.entrySet()) {
+							if (entry.getValue().containsKey(i) &&
+									!entry.getValue().get(i)[5].equals("")) {
+								average += Double.parseDouble(entry.getValue().get(i)[5]);
+								averageN++;
+							}
+							
 							if (entry.getValue().containsKey(i - 1) &&
 									!entry.getValue().get(i - 1)[6].equals("")) {
 								average += Double.parseDouble(entry.getValue().get(i - 1)[6]);
@@ -115,33 +130,39 @@ public class CSVReaderInterpolationEmre {
 						averages[i] = average = average / averageN;
 
 						for (var entry : dictionary.entrySet()) {
+							if (entry.getValue().containsKey(i) &&
+									!entry.getValue().get(i)[5].equals("")) {
+								interpolationDic.get(entry.getKey() + 0)
+										.add(new Point2D.Double(i, Double.parseDouble(entry.getValue().get(i)[5]) - average));
+							}
+							
 							if (entry.getValue().containsKey(i - 1) &&
 									!entry.getValue().get(i - 1)[6].equals("")) {
-								interpolationDic.get(entry.getKey())
+								interpolationDic.get(entry.getKey() + 1)
 										.add(new Point2D.Double(i, Double.parseDouble(entry.getValue().get(i - 1)[6]) - average));
 							}
 
 							if (entry.getValue().containsKey(i - 2) &&
 									!entry.getValue().get(i - 2)[7].equals("")) {
-								interpolationDic.get(entry.getKey() + 1)
+								interpolationDic.get(entry.getKey() + 2)
 										.add(new Point2D.Double(i, Double.parseDouble(entry.getValue().get(i - 2)[7]) - average));
 							}
 
 							if (entry.getValue().containsKey(i - 3) &&
 									!entry.getValue().get(i - 3)[8].equals("")) {
-								interpolationDic.get(entry.getKey() + 2)
+								interpolationDic.get(entry.getKey() + 3)
 										.add(new Point2D.Double(i, Double.parseDouble(entry.getValue().get(i - 3)[8]) - average));
 							}
 
 							if (entry.getValue().containsKey(i - 4) &&
 									!entry.getValue().get(i - 4)[9].equals("")) {
-								interpolationDic.get(entry.getKey() + 3)
+								interpolationDic.get(entry.getKey() + 4)
 										.add(new Point2D.Double(i, Double.parseDouble(entry.getValue().get(i - 4)[9]) - average));
 							}
 
 							if (entry.getValue().containsKey(i - 5) &&
 									!entry.getValue().get(i - 5)[10].equals("")) {
-								interpolationDic.get(entry.getKey() + 4)
+								interpolationDic.get(entry.getKey() + 5)
 										.add(new Point2D.Double(i, Double.parseDouble(entry.getValue().get(i - 5)[10]) - average));
 							}
 						}
@@ -182,9 +203,9 @@ public class CSVReaderInterpolationEmre {
 							output.append(i / 4).append(",");
 							output.append(i % 4 + 1).append(",");
 							output.append(entry.getKey()).append(",");
+							output.append(entry.getValue().entrySet().iterator().next().getValue()[4]).append(",");
 
 							if (entry.getValue().containsKey(i)) {
-								output.append(entry.getValue().get(i)[4]).append(",");
 								output.append(entry.getValue().get(i)[5]).append(",");
 								output.append(entry.getValue().get(i)[6]).append(",");
 								output.append(entry.getValue().get(i)[7]).append(",");
@@ -193,7 +214,7 @@ public class CSVReaderInterpolationEmre {
 								output.append(entry.getValue().get(i)[10]).append(",");
 								output.append(entry.getValue().get(i)[11]).append(",");
 								output.append(entry.getValue().get(i)[12]).append(",");
-								output.append(entry.getValue().get(i)[13]).append(",");
+								output.append(entry.getValue().entrySet().iterator().next().getValue()[13]).append(",");
 								output.append(entry.getValue().get(i)[14]).append(",");
 								output.append(entry.getValue().get(i)[15]).append(",");
 								output.append(entry.getValue().get(i)[16]).append(",");
@@ -201,12 +222,15 @@ public class CSVReaderInterpolationEmre {
 								output.append(entry.getValue().get(i)[18]).append(",");
 								output.append(entry.getValue().get(i)[19]);
 							} else {
-								output.append(",");
+								addInterpolate(entry, i, output, interpolationDic, averages, 0);
 								addInterpolate(entry, i, output, interpolationDic, averages, 1);
 								addInterpolate(entry, i, output, interpolationDic, averages, 2);
 								addInterpolate(entry, i, output, interpolationDic, averages, 3);
 								addInterpolate(entry, i, output, interpolationDic, averages, 4);
-//								addInterpolate(entry, i, output, interpolationDic, averages, 5);
+								addInterpolate(entry, i, output, interpolationDic, averages, 5);
+								output.append(",");
+								output.append(",");
+								output.append(entry.getValue().entrySet().iterator().next().getValue()[13]).append(",");
 							}
 
 							output.append("\n");
@@ -235,10 +259,10 @@ public class CSVReaderInterpolationEmre {
 		if (points.size() >= 3)
 			spline = new CubicSpline(points.getX(), points.getY());
 
-		if (spline != null && timestep > spline.getXmin() && timestep < spline.getXmax())
+		if (spline != null && timestep > spline.getXmin() && timestep < spline.getXmax() && spline.interpolate(timestep) != Double.NaN)
 			output.append(spline.interpolate(timestep) + averages[timestep]);
-		else // TODO add bias
-			output.append(averages[timestep + 1]);
+		else
+			output.append(averages[timestep + offset] + points.average());
 		output.append(",");
 	}
 }
