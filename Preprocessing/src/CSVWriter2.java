@@ -21,7 +21,7 @@ public class CSVWriter2 {
 
 		String line = "";
 		String cvsSplitBy = ",";
-		String outputPath = "output/";
+		String outputPath = "output_lagged_preprocessed/";
 
 		int lowest = Integer.MAX_VALUE;
 		int highest = 0;

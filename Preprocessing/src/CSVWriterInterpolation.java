@@ -21,7 +21,7 @@ public class CSVWriterInterpolation {
 
 		String line = "";
 		String cvsSplitBy = ",";
-		String outputPath = "output_interpolation/";
+		String outputPath = "output_lagged_preprocessed_interpolation/";
 
 		int lowest = Integer.MAX_VALUE;
 		int highest = 0;
@@ -175,31 +175,31 @@ public class CSVWriterInterpolation {
 							if (entry.getValue().containsKey(i - 1) &&
 								!entry.getValue().get(i - 1)[6].equals("")) {
 								interpolationDic.get(entry.getKey())
-									.add(new Point2D.Double(i, Double.parseDouble(entry.getValue().get(i - 1)[6]) - average));
+									.add(new Point2D.Double(i, Double.parseDouble(entry.getValue().get(i - 1)[6]) / average));
 							}
 
 							if (entry.getValue().containsKey(i - 2) &&
 								!entry.getValue().get(i - 2)[7].equals("")) {
 								interpolationDic.get(entry.getKey() + 1)
-									.add(new Point2D.Double(i, Double.parseDouble(entry.getValue().get(i - 2)[7]) - average));
+									.add(new Point2D.Double(i, Double.parseDouble(entry.getValue().get(i - 2)[7]) / average));
 							}
 							
 							if (entry.getValue().containsKey(i - 3) &&
 								!entry.getValue().get(i - 3)[8].equals("")) {
 								interpolationDic.get(entry.getKey() + 2)
-									.add(new Point2D.Double(i, Double.parseDouble(entry.getValue().get(i - 3)[8]) - average));
+									.add(new Point2D.Double(i, Double.parseDouble(entry.getValue().get(i - 3)[8]) / average));
 							}
 							
 							if (entry.getValue().containsKey(i - 4) &&
 								!entry.getValue().get(i - 4)[9].equals("")) {
 								interpolationDic.get(entry.getKey() + 3)
-									.add(new Point2D.Double(i, Double.parseDouble(entry.getValue().get(i - 4)[9]) - average));
+									.add(new Point2D.Double(i, Double.parseDouble(entry.getValue().get(i - 4)[9]) / average));
 							}
 							
 							if (entry.getValue().containsKey(i - 5) &&
 								!entry.getValue().get(i - 5)[10].equals("")) {
 								interpolationDic.get(entry.getKey() + 4)
-									.add(new Point2D.Double(i, Double.parseDouble(entry.getValue().get(i - 5)[10]) - average));
+									.add(new Point2D.Double(i, Double.parseDouble(entry.getValue().get(i - 5)[10]) / average));
 							}
 						}
 					}
@@ -235,9 +235,9 @@ public class CSVWriterInterpolation {
 										spline = new CubicSpline(points.getX(), points.getY());
 									
 									if (spline != null && i > spline.getXmin() && i < spline.getXmax())
-										output.append(spline.interpolate(i) + averages[i]);
-									else
-										output.append(points.average() + averages[i]);
+										output.append(spline.interpolate(i) * averages[i]);
+									else if (points.average() != Double.NaN)
+										output.append(points.average() * averages[i]);
 								}
 								output.append(",");
 							}
@@ -253,9 +253,9 @@ public class CSVWriterInterpolation {
 										spline = new CubicSpline(points.getX(), points.getY());
 									
 									if (spline != null && i > spline.getXmin() && i < spline.getXmax())
-										output.append(spline.interpolate(i) + averages[i]);
-									else
-										output.append(points.average() + averages[i]);
+										output.append(spline.interpolate(i) * averages[i]);
+									else if (points.average() != Double.NaN)
+										output.append(points.average() * averages[i]);
 								}
 								output.append(",");
 							}
@@ -271,9 +271,9 @@ public class CSVWriterInterpolation {
 										spline = new CubicSpline(points.getX(), points.getY());
 									
 									if (spline != null && i > spline.getXmin() && i < spline.getXmax())
-										output.append(spline.interpolate(i) + averages[i]);
-									else
-										output.append(points.average() + averages[i]);
+										output.append(spline.interpolate(i) * averages[i]);
+									else if (points.average() != Double.NaN)
+										output.append(points.average() * averages[i]);
 								}
 								output.append(",");
 							}
@@ -289,9 +289,9 @@ public class CSVWriterInterpolation {
 										spline = new CubicSpline(points.getX(), points.getY());
 									
 									if (spline != null && i > spline.getXmin() && i < spline.getXmax())
-										output.append(spline.interpolate(i) + averages[i]);
-									else
-										output.append(points.average() + averages[i]);
+										output.append(spline.interpolate(i) * averages[i]);
+									else if (points.average() != Double.NaN)
+										output.append(points.average() * averages[i]);
 								}
 								output.append(",");
 							}
@@ -307,9 +307,9 @@ public class CSVWriterInterpolation {
 										spline = new CubicSpline(points.getX(), points.getY());
 									
 									if (spline != null && i > spline.getXmin() && i < spline.getXmax())
-										output.append(spline.interpolate(i) + averages[i]);
+										output.append(spline.interpolate(i) * averages[i]);
 									else if (points.average() != Double.NaN)
-										output.append(points.average() + averages[i]);
+										output.append(points.average() * averages[i]);
 								}
 								output.append(",");
 							}
